@@ -22,7 +22,7 @@
             </table>
         </article>
     </main>
-    <FooterPadrao :fixado="true"/>
+    <FooterPadrao />
 </template> 
 
 <script setup>

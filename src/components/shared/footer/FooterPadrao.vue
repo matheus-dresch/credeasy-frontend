@@ -1,5 +1,5 @@
 <template>
-    <footer class="footer mt-auto container-fluid d-block" :class="{ 'fixed-bottom': fixado }">
+    <footer class="footer mt-auto container-fluid d-block">
         <section id="scrollspyHeading3" class="container-fluid d-grid">
             <div class="row">
                 <div class="col-12 col-lg-3 p-3 d-flex align-items-center justify-content-center">
@@ -29,17 +29,9 @@
 import IconeSocial from './IconeSocial.vue';
 import Link from './LinkFooter.vue';
 
-defineProps({
-    fixado: {
-        type: Boolean,
-        default: false
-    }
-})
-
 </script>
 
 <style scoped>
-
 footer {
     background-color: #000;
 }

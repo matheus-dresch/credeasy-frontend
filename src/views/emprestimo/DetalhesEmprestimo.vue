@@ -7,7 +7,7 @@
                 <tbody>
                     <tr>
                         <th class="w-50">ID</th>
-                        <td># {{ emprestimo.id }}</td>
+                        <th># {{ emprestimo.id }}</th>
                     </tr>
                     <tr>
                         <th>Nome</th>
@@ -15,17 +15,38 @@
                     </tr>
                     <tr>
                         <th>Valor inicial</th>
-                        <td>{{ emprestimo.valor }}</td>
+                        <td>{{ formataDinheiro(emprestimo.valor) }}</td>
                     </tr>
                     <tr>
                         <th>Valor final</th>
-                        <td>{{ emprestimo.valor_final }}</td>
+                        <td>{{ formataDinheiro(emprestimo.valor_final) }}</td>
+                    </tr>
+                    <tr>
+                        <th>Data Solicitação</th>
+                        <td>{{ formataData(emprestimo.data_solicitacao) }}</td>
+                    </tr>
+                    <tr>
+                        <th>Data Quitação</th>
+                        <td>{{ formataData(emprestimo.data_quitacao) }}</td>
+                    </tr>
+                    <tr>
+                        <th>Nº parcelas</th>
+                        <td>{{ emprestimo.qtd_parcelas }}</td>
+                    </tr>
+                    <tr>
+                        <th>Taxa de juros</th>
+                        <td>{{ emprestimo.taxa_juros.toFixed(2) }} %</td>
+                    </tr>
+                    <tr>
+                        <th>Status</th>
+                        <td>{{ emprestimo.status }}</td>
                     </tr>
 
                 </tbody>
             </table>
         </div>
     </main>
+    <FooterPadrao  />
 </template>
 
 <script setup>
@@ -33,6 +54,7 @@ import axios from 'axios';
 import { ref } from 'vue';
 import { useRoute } from 'vue-router';
 import HeaderCliente from '../../components/shared/headers/HeaderCliente.vue';
+import FooterPadrao from '../../components/shared/footer/FooterPadrao.vue';
 
 const emprestimo = ref();
 const idEmprestimo = useRoute().params.id
@@ -40,10 +62,15 @@ const idEmprestimo = useRoute().params.id
 axios.get(`http://localhost:8000/api/emprestimos/${idEmprestimo}`)
     .then(res => emprestimo.value = res.data);
 
-let formatador = Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
+const formataDinheiro = (numero) => {
+    return Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(numero)
+};
 
-emprestimo.valor = formatador.format(emprestimo.valor)
-emprestimo.valor_final = formatador.format(emprestimo.valor_final)
+const formataData = (data) => {
+    if (!data) return '--/--/----'
+
+    return (new Date(data)).toLocaleDateString("pt-BR")
+}
 
 </script>
 
