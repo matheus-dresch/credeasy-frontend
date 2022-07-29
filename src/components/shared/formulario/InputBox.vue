@@ -39,5 +39,5 @@ defineProps({
 </script>
 
 <style scoped>
-@import '/src/assets/css/input.css';
+@import '@/assets/css/input.css';
 </style>

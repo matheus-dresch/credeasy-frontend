@@ -29,13 +29,5 @@ import FooterPadrao from '../components/shared/footer/FooterPadrao.vue';
     body {
         padding: 0;
     }
-
-    form {
-        width: 100%;
-    }
-
-    .input-box {
-        width: 100%;
-    }
 }
 </style>

@@ -44,6 +44,10 @@
 
                 </tbody>
             </table>
+            <BotaoRoxo :url="`/emprestimo/${emprestimo.id}/parcelas`"/>
+        </div>
+        <div v-else class="bg-dark-25 rounded-4 p-3 w-50">
+            <h2 class="text-light text-center">Carregando empréstimo... <Loader /></h2>
         </div>
     </main>
     <FooterPadrao  />
@@ -55,6 +59,8 @@ import { ref } from 'vue';
 import { useRoute } from 'vue-router';
 import HeaderCliente from '../../components/shared/headers/HeaderCliente.vue';
 import FooterPadrao from '../../components/shared/footer/FooterPadrao.vue';
+import Loader from '../../components/shared/Loader.vue';
+import BotaoRoxo from '../../components/shared/BotaoRoxo.vue';
 
 const emprestimo = ref();
 const idEmprestimo = useRoute().params.id

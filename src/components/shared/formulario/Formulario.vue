@@ -39,4 +39,10 @@ form h1 {
     margin-bottom: 20px;
     text-align: center;
 }
+
+@media screen and (max-width: 520px) {
+    form {
+        width: 100%;
+    }
+}
 </style>
