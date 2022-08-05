@@ -5,14 +5,21 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview --port 4173",
-    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore"
+    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore",
+    "start": "cd ../CredEasyAPI && php artisan serve"
   },
   "dependencies": {
+    "@devindex/vue-mask": "^2.0.3",
     "axios": "^0.27.2",
+    "cpf-cnpj-validator": "^1.0.3",
+    "simple-mask-money": "^3.0.1",
+    "v-money": "^0.8.1",
+    "vee-validate": "^4.6.2",
     "vue": "^3.2.37",
     "vue-loading-overlay": "^5.0.3",
-    "vue-material-design-icons": "^5.1.2",
-    "vue-router": "^4.1.2"
+    "vue-router": "^4.1.2",
+    "yup": "^0.32.11",
+    "yup-locale-pt": "^0.0.9"
   },
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.1.0",

@@ -1,18 +1,22 @@
 <template>
-    <button @click="$emit('clicado')" class="btn btn-outline-purple d-flex w-100">
+    <router-link :to="url" class="btn btn-outline-purple d-flex">
         <span class="material-symbols-outlined me-2">
             arrow_circle_right
         </span>
         <span class="d-none d-sm-inline">
             {{ titulo }}
         </span>
-    </button>
+    </router-link>
 </template>
 
 <script setup>
 import { ref } from 'vue';
 
 defineProps({
+    url: {
+        type: String,
+        default: '/'
+    },
     icone: {
         type: String,
         default: 'arrow_circle_right'

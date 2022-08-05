@@ -1,9 +1,10 @@
 <template>
     <HeaderCliente />
-    <main class="p-3 d-flex justify-content-center">
-        <div class="bg-dark-25 rounded-4 p-3 w-50" v-if="emprestimo">
-            <h1 class="text-light text-center">Empréstimo '{{ emprestimo.nome }}'</h1>
-            <table class="table text-light">
+    <main class="p-3 d-flex justify-content-center vld-parent">
+        <loading v-model:active="isLoading" :is-full-page="true" color="#fff" background-color="#0009" />
+        <FundoPadrao size="50">
+            <MsgErro v-if="erro.status" :erro="erro"/>
+            <TabelaPadrao v-if="emprestimo" :titulo="`Empréstimo ${emprestimo.nome}`">
                 <tbody>
                     <tr>
                         <th class="w-50">ID</th>
@@ -41,42 +42,55 @@
                         <th>Status</th>
                         <td>{{ emprestimo.status }}</td>
                     </tr>
-
+                    <tr>
+                        <td colspan="2">
+                            <LinkRoxo titulo="Acessar parcelas" :url="`/emprestimos/${emprestimo.id}/parcelas`" />
+                        </td>
+                    </tr>
                 </tbody>
-            </table>
-            <BotaoRoxo :url="`/emprestimo/${emprestimo.id}/parcelas`"/>
-        </div>
-        <div v-else class="bg-dark-25 rounded-4 p-3 w-50">
-            <h2 class="text-light text-center">Carregando empréstimo... <Loader /></h2>
-        </div>
+            </TabelaPadrao>
+        </FundoPadrao>
     </main>
-    <FooterPadrao  />
+    <FooterPadrao />
 </template>
 
 <script setup>
-import axios from 'axios';
-import { ref } from 'vue';
-import { useRoute } from 'vue-router';
-import HeaderCliente from '../../components/shared/headers/HeaderCliente.vue';
-import FooterPadrao from '../../components/shared/footer/FooterPadrao.vue';
-import Loader from '../../components/shared/Loader.vue';
-import BotaoRoxo from '../../components/shared/BotaoRoxo.vue';
 
+// Componentes:
+import HeaderCliente from '../../components/shared/headers/HeaderCliente.vue';
+import TabelaPadrao from '../../components/shared/TabelaPadrao.vue';
+import FooterPadrao from '../../components/shared/footer/FooterPadrao.vue';
+import FundoPadrao from '../../components/shared/FundoPadrao.vue';
+import LinkRoxo from '../../components/shared/LinkRoxo.vue';
+import MsgErro from '../../components/shared/MsgErro.vue';
+
+// Outros
+import { formataDinheiro, formataData } from '@/assets/js/formatar'
+import { useRoute } from 'vue-router';
+import { ref } from 'vue';
+import axios from 'axios';
+
+const isLoading = ref(true);
 const emprestimo = ref();
+const erro = ref({
+    status: '',
+    msg: ''
+})
+
 const idEmprestimo = useRoute().params.id
 
-axios.get(`http://localhost:8000/api/emprestimos/${idEmprestimo}`)
-    .then(res => emprestimo.value = res.data);
+console.log(`emprestimos/${idEmprestimo}`);
 
-const formataDinheiro = (numero) => {
-    return Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(numero)
-};
-
-const formataData = (data) => {
-    if (!data) return '--/--/----'
-
-    return (new Date(data)).toLocaleDateString("pt-BR")
-}
+axios.get(`emprestimos/${idEmprestimo}`)
+    .then(res => {
+        console.log(res.data);
+        emprestimo.value = res.data
+    })
+    .catch(err => {
+        erro.value.msg = `Tivemos um problema ao carregar o empréstimo`;
+        erro.value.status = err.response.status;
+    })
+    .finally(() => isLoading.value = false);
 
 </script>
 

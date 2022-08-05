@@ -1,8 +1,10 @@
 <template>
     <HeaderCliente />
-    <main class="p-3 d-flex justify-content-center">
-        <FundoPadrao size="50" v-if="emprestimo && cliente">
-            <TabelaPadrao :titulo="`Cliente ${cliente.nome}`">
+    <main class="p-3 d-flex justify-content-center vld-parent">
+        <loading v-model:active="isLoading" :is-full-page="true" color="#fff" background-color="#0009" />
+        <FundoPadrao size="50">
+            <MsgErro v-if="erro.status" :erro="erro" />
+            <TabelaPadrao v-if="cliente" :titulo="`Cliente ${cliente.nome}`">
                 <tbody>
                     <tr>
                         <th class="w-50">ID</th>
@@ -22,7 +24,7 @@
                     </tr>
                 </tbody>
             </TabelaPadrao>
-            <TabelaPadrao :titulo="`Empréstimo ${emprestimo.nome}`">
+            <TabelaPadrao v-if="emprestimo" :titulo="`Empréstimo ${emprestimo.nome}`">
                 <tbody>
                     <tr>
                         <th class="w-50">ID</th>
@@ -63,57 +65,75 @@
                         <th>Status</th>
                         <td>{{ emprestimo.status }}</td>
                     </tr>
+                    <tr>
+                        <td>
+                            <div class="mb-2">
+                                <label for="valor_parc" class="form-label text-light">Taxa de juros (%)</label>
+                                <input class="form-control" type="number" min="10" max="20" step="0.1" name="taxa"
+                                    id="taxa" :value="emprestimo.taxa_juros">
+                            </div>
+                            <div>
+                                <button type="submit" value="1" name="status"
+                                    class="form-control btn btn-outline-success w-100 me-1">
+                                    Aprovar
+                                </button>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="mb-2">
+                                <label for="valor_parc" class="form-label text-light">Valor da parcela</label>
+                                <input class="form-control disabled" type="text" id="valor_parc" disabled value="R$ ">
+                            </div>
+                            <div>
+                                <button type="submit" value="0" name="status"
+                                    class="form-control btn btn-outline-danger w-100 me-1">
+                                    Rejeitar
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
                 </tbody>
             </TabelaPadrao>
-            <div>
-                <form action="" class="w-100" method="post">
-                    <div class="row">
-                        <div class="col pe-1">
-                            <label for="valor_parc" class="form-label text-light">Taxa de juros (%)</label>
-                            <input class="form-control" type="number" min="10" max="20" step="0.1" name="taxa"
-                                id="taxa">
-                        </div>
-                        <div class="col ps-1">
-                            <label for="valor_parc" class="form-label text-light">Valor da parcela</label>
-                            <input class="form-control disabled" type="text" id="valor_parc" disabled value="R$ ">
-                        </div>
-                    </div>
-                    <div class="d-flex w-100 mt-3">
-                        <button type="submit" value="1" name="status"
-                            class="form-control btn btn-outline-success w-100 me-1">
-                            Aprovar
-                        </button>
-                        <button type="submit" value="2" name="status" class="btn btn-outline-danger w-100 ms-1">
-                            Rejeitar
-                        </button>
-                    </div>
-                </form>
-            </div>
         </FundoPadrao>
     </main>
     <FooterPadrao />
 </template>
 
 <script setup>
-import { ref } from 'vue';
+
+// Componentes:
 import HeaderCliente from '../../components/shared/headers/HeaderCliente.vue';
 import FooterPadrao from '../../components/shared/footer/FooterPadrao.vue';
-import Loader from '../../components/shared/Loader.vue';
-import axios from 'axios';
-import { useRoute } from 'vue-router';
-import DataSpan from '../../components/shared/DataSpan.vue';
-import DinheiroSpan from '../../components/shared/DinheiroSpan.vue';
 import TabelaPadrao from '../../components/shared/TabelaPadrao.vue';
 import FundoPadrao from '../../components/shared/FundoPadrao.vue';
+import MsgErro from '../../components/shared/MsgErro.vue';
+
+// Outros
+import { useRoute } from 'vue-router';
+import { ref } from 'vue';
+import axios from 'axios';
 
 const emprestimo = ref();
 const cliente = ref();
 
-const emprestimoId = useRoute().params.id
+const isLoading = ref(true);
+const erro = ref({
+    status: '',
+    msg: ''
+})
 
-axios.get(`http://localhost:8000/api/emprestimos/${emprestimoId}`)
-    .then(res => emprestimo.value = res.data)
-    .then(() => cliente.value = emprestimo.value.cliente);
+const emprestimoId = useRoute().params.id
+axios.get(`emprestimos/${emprestimoId}`)
+    .then(res => {
+        emprestimo.value = res.data;
+        cliente.value = res.data.cliente;
+    })
+    .catch(err => {
+        erro.value.msg = `Tivemos um problema ao carregar o empréstimo`;
+        erro.value.status = err.response.status;
+    })
+    .finally(() => isLoading.value = false);
+
 </script>
 
 <style>

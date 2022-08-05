@@ -65,6 +65,24 @@
     display: inline-block;
 }
 
+.error-message {
+    font-family: 'Poppins', sans-serif;
+    display: none;
+    font-weight: 100;
+    font-size: 1rem;
+
+    border-radius: 0 0 5px 5px;
+    background-color: #f005;
+    padding: 5px 10px;
+
+    width: 100%;
+
+    list-style: circle;
+    list-style-type: disc;
+
+    color: #ddd;
+}
+
 .input-box:disabled {
     cursor: not-allowed;
 }

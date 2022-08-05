@@ -1,9 +1,10 @@
 <template>
     <HeaderCliente />
-    <main class="p-3">
-        <article class="bg-dark-25 p-2 rounded-4">
-            <h3 class="text-light">Lista de empréstimos</h3>
-            <table class="table text-light">
+    <main class="p-3 d-flex justify-content-center vld-parent">
+        <loading v-model:active="isLoading" :is-full-page="true" color="#fff" background-color="#0009" />
+        <FundoPadrao size="100">
+            <MsgErro v-if="erro.status" :erro="erro" />
+            <TabelaPadrao v-if="emprestimos" titulo="Lista de empréstimos">
                 <thead>
                     <th class="w-15">Nome</th>
                     <th class="w-15">Valor</th>
@@ -12,46 +13,53 @@
                     <th class="w-15">Status</th>
                 </thead>
                 <tbody>
-                    <tr v-if="emprestimos" v-for="emprestimo of emprestimos">
+                    <tr v-for="emprestimo of emprestimos">
                         <td>{{ emprestimo.nome }}</td>
-                        <td><DinheiroSpan :valor="emprestimo.valor"/></td>
+                        <td>{{ formataDinheiro(emprestimo.valor) }}</td>
                         <td>{{ emprestimo.qtd_parcelas }}</td>
-                        <td><DataSpan :data="emprestimo.data_solicitacao" /></td>
+                        <td>{{ formataData(emprestimo.data_solicitacao) }}</td>
                         <td>{{ emprestimo.status }}</td>
-                        <td><BotaoRoxo :url="`/emprestimos/${emprestimo.id}`" /></td>
-                    </tr>
-                    <tr v-if="loading">
-                        <td><Loader /></td>
-                        <td><Loader /></td>
-                        <td><Loader /></td>
-                        <td><Loader /></td>
-                        <td><Loader /></td>
+                        <td><LinkRoxo :url="`/emprestimos/${emprestimo.id}`" /></td>
                     </tr>
                 </tbody>
-            </table>
-        </article>
+            </TabelaPadrao>
+        </FundoPadrao>
     </main>
     <FooterPadrao />
 </template> 
 
 <script setup>
+
+// Componentes:
 import HeaderCliente from '../../components/shared/headers/HeaderCliente.vue';
 import FooterPadrao from '../../components/shared/footer/FooterPadrao.vue';
-import DinheiroSpan from '../../components/shared/DinheiroSpan.vue';
-import BotaoRoxo from '../../components/shared/BotaoRoxo.vue';
-import DataSpan from '../../components/shared/DataSpan.vue';
+import TabelaPadrao from '../../components/shared/TabelaPadrao.vue';
+import FundoPadrao from '../../components/shared/FundoPadrao.vue';
+import LinkRoxo from '../../components/shared/LinkRoxo.vue';
+import MsgErro from '../../components/shared/MsgErro.vue';
+
+// Outros:
 import { ref } from 'vue';
-import Loader from '../../components/shared/Loader.vue';
 import axios from 'axios';
+import { formataData, formataDinheiro } from '../../assets/js/formatar';
 
-const emprestimos = ref([]);
-const loading = ref(true)
+const emprestimos = ref();
+const isLoading = ref(true)
+const erro = ref({
+    status: '',
+    msg: ''
+})
 
-axios.get('http://localhost:8000/api/emprestimos')
+axios.get('emprestimos')
     .then(res => {
-        loading.value = false
         emprestimos.value = res.data
     })
+    .catch(err => {
+        erro.value.msg = `Tivemos um problema ao carregar os empréstimos`;
+        erro.value.status = err.response.status;
+    })
+    .finally(() => isLoading.value = false);
+
 </script>
 
 <style>

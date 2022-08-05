@@ -15,6 +15,9 @@
 </template>
 
 <script setup>
+
+import { ref, onMounted } from 'vue';
+
 import InputBox from '../components/shared/formulario/InputBox.vue';
 import Formulario from '../components/shared/formulario/Formulario.vue';
 import Botao from '../components/shared/formulario/Botao.vue';

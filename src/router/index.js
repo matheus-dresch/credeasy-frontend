@@ -7,6 +7,8 @@ import FormularioEmprestimo from "../views/emprestimo/FormularioEmprestimo.vue";
 import DetalhesEmprestimo from "../views/emprestimo/DetalhesEmprestimo.vue";
 import AnalisarEmprestimo from "../views/emprestimo/AnalisarEmprestimo.vue";
 import ParcelasEmprestimo from "../views/emprestimo/ParcelasEmprestimo.vue";
+import ClienteView from "../views/ClienteView.vue";
+import NotFoundView from "../views/NotFoundView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -51,6 +53,16 @@ const router = createRouter({
       name: "parcelas-emprestimo",
       component: ParcelasEmprestimo,
     },
+    {
+      path: "/cliente",
+      name: "cliente",
+      component: ClienteView,
+    },
+    {
+      path: "/:pathMatch(.*)*",
+      name: "NotFound",
+      component: NotFoundView,
+    }
   ],
 });
 
