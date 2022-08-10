@@ -14,7 +14,6 @@ import { ref } from 'vue';
 
 defineProps({
     url: {
-        type: String,
         default: '/'
     },
     icone: {

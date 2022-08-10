@@ -1,7 +1,11 @@
-export function formataData(data) {
+export function formataData(data, horas = false) {
     if (!data) return '--/--/----'
 
-    return (new Date(data)).toLocaleDateString("pt-BR")
+    if (! horas) {
+        return (new Date(data)).toLocaleDateString('pt-BR')
+    } else {
+        return (new Date(data)).toLocaleString('pt-BR')
+    }
 }
 export function formataDinheiro(numero) {
     return Intl.NumberFormat('pt-BR', {

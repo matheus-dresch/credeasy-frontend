@@ -42,7 +42,7 @@
                         <th>Status</th>
                         <td>{{ emprestimo.status }}</td>
                     </tr>
-                    <tr>
+                    <tr v-if="emprestimo.tem_parcelas">
                         <td colspan="2">
                             <LinkRoxo titulo="Acessar parcelas" :url="`/emprestimos/${emprestimo.id}/parcelas`" />
                         </td>
@@ -63,12 +63,12 @@ import FooterPadrao from '../../components/shared/footer/FooterPadrao.vue';
 import FundoPadrao from '../../components/shared/FundoPadrao.vue';
 import LinkRoxo from '../../components/shared/LinkRoxo.vue';
 import MsgErro from '../../components/shared/MsgErro.vue';
+import EmprestimoService from '../../service/EmprestimoService';
 
 // Outros
 import { formataDinheiro, formataData } from '@/assets/js/formatar'
 import { useRoute } from 'vue-router';
 import { ref } from 'vue';
-import axios from 'axios';
 
 const isLoading = ref(true);
 const emprestimo = ref();
@@ -79,12 +79,9 @@ const erro = ref({
 
 const idEmprestimo = useRoute().params.id
 
-console.log(`emprestimos/${idEmprestimo}`);
-
-axios.get(`emprestimos/${idEmprestimo}`)
+EmprestimoService.detalha(idEmprestimo)
     .then(res => {
-        console.log(res.data);
-        emprestimo.value = res.data
+        emprestimo.value = res
     })
     .catch(err => {
         erro.value.msg = `Tivemos um problema ao carregar o empréstimo`;

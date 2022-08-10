@@ -31,21 +31,15 @@
 }
 
 .input-box {
-    display: block;
-
-    width: 100%;
-    height: 4vh;
-    border-radius: 10px;
-    font-family: 'Roboto', Helvetica, sans-serif;
-    font-size: 15px;
-    padding: 0 10px;
-
-    color: #FFF;
-
-    outline: none;
-    border: none;
-    background-color: transparent;
+    background-color: #5555 !important;
+    outline: #9995;
 }
+
+.input-box-read {
+    background-color: #3337 !important;
+    outline: #1115;
+}
+
 
 .input-box::placeholder {
     color: #FFF7;

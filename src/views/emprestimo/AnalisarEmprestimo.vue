@@ -1,7 +1,7 @@
 <template>
     <HeaderCliente />
     <main class="p-3 d-flex justify-content-center vld-parent">
-        <loading v-model:active="isLoading" :is-full-page="true" color="#fff" background-color="#0009" />
+        <Loading :is-loading="isLoading" />
         <FundoPadrao size="50">
             <MsgErro v-if="erro.status" :erro="erro" />
             <TabelaPadrao v-if="cliente" :titulo="`Cliente ${cliente.nome}`">
@@ -37,7 +37,7 @@
                     <tr>
                         <th>Valor inicial</th>
                         <td>
-                            <DinheiroSpan :valor="emprestimo.valor" />
+                            {{ formataDinheiro(emprestimo.valor) }}
                         </td>
                     </tr>
                     <tr>
@@ -48,13 +48,13 @@
                             </span>
                         </th>
                         <td>
-                            <DinheiroSpan :valor="emprestimo.valor_final" />
+                            {{ formataDinheiro(emprestimo.valor_final) }}
                         </td>
                     </tr>
                     <tr>
                         <th>Data de solicitação</th>
                         <td>
-                            <DataSpan :data="emprestimo.data_solicitacao" />
+                            {{ formataData(emprestimo.data_solicitacao) }}
                         </td>
                     </tr>
                     <tr>
@@ -65,7 +65,7 @@
                         <th>Status</th>
                         <td>{{ emprestimo.status }}</td>
                     </tr>
-                    <tr>
+                    <tr v-if="emprestimo.status === 'SOLICITADO'">
                         <td>
                             <div class="mb-2">
                                 <label for="valor_parc" class="form-label text-light">Taxa de juros (%)</label>
@@ -73,7 +73,7 @@
                                     id="taxa" :value="emprestimo.taxa_juros">
                             </div>
                             <div>
-                                <button type="submit" value="1" name="status"
+                                <button @click.prevent="analisaEmprestimo(true)"
                                     class="form-control btn btn-outline-success w-100 me-1">
                                     Aprovar
                                 </button>
@@ -85,15 +85,20 @@
                                 <input class="form-control disabled" type="text" id="valor_parc" disabled value="R$ ">
                             </div>
                             <div>
-                                <button type="submit" value="0" name="status"
+                                <button @click.prevent="analisaEmprestimo(false)"
                                     class="form-control btn btn-outline-danger w-100 me-1">
                                     Rejeitar
                                 </button>
                             </div>
                         </td>
                     </tr>
+                    <tr v-else>
+                        <th>Taxa de juros</th>
+                        <td>{{ emprestimo.taxa_juros }}</td>
+                    </tr>
                 </tbody>
             </TabelaPadrao>
+            <Alerta v-if="mensagemDeErro" :texto="mensagemDeErro" />
         </FundoPadrao>
     </main>
     <FooterPadrao />
@@ -111,7 +116,10 @@ import MsgErro from '../../components/shared/MsgErro.vue';
 // Outros
 import { useRoute } from 'vue-router';
 import { ref } from 'vue';
-import axios from 'axios';
+import EmprestimoService from '../../service/EmprestimoService';
+import Loading from '../../components/shared/Loading.vue';
+import { formataData, formataDinheiro } from '../../assets/js/formatar';
+import Alerta from '../../components/shared/Alerta.vue';
 
 const emprestimo = ref();
 const cliente = ref();
@@ -123,16 +131,31 @@ const erro = ref({
 })
 
 const emprestimoId = useRoute().params.id
-axios.get(`emprestimos/${emprestimoId}`)
+EmprestimoService.detalha(emprestimoId)
     .then(res => {
-        emprestimo.value = res.data;
-        cliente.value = res.data.cliente;
+        emprestimo.value = res;
+        cliente.value = res.cliente;
     })
     .catch(err => {
         erro.value.msg = `Tivemos um problema ao carregar o empréstimo`;
         erro.value.status = err.response.status;
     })
     .finally(() => isLoading.value = false);
+
+
+const mensagemDeErro = ref('');
+function analisaEmprestimo(aprovado) {
+    isLoading.value = true
+    EmprestimoService.analisa(aprovado, emprestimoId)
+        .then(res => {
+            emprestimo.value = res;
+        })
+        .catch(err => {
+            console.log(err);
+            mensagemDeErro.value = `Houve um problema ao analisar o empréstimo, tente novamente. [${err.response.status}]`
+        })
+        .finally(() => isLoading.value = false)
+}
 
 </script>
 

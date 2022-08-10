@@ -16,8 +16,11 @@
                     <li class="nav-item">
                         <router-link class="nav-link navbar-link rounded" to="">suporte</router-link>
                     </li>
-                    <li class="nav-item">
-                        <router-link class="nav-link navbar-link rounded" to="/">sou gestor</router-link>
+                    <li v-if="store.getters.usuarioEhGestor" class="nav-item">
+                        <router-link class="nav-link navbar-link rounded" :to="{ name: 'gestor' }">sou gestor</router-link>
+                    </li>
+                    <li>
+                       <a @click.prevent="efetuaLogout" class="nav-link" href="#">logout</a> 
                     </li>
                 </ul>
             </section>
@@ -26,7 +29,15 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { useStore } from 'vuex';
+import router from '../../../router';
+
+const store = useStore();
+
+function efetuaLogout() {
+    store.commit('DESLOGA_USUARIO')
+    router.push({ name: 'entrar' })
+}
 
 </script>
 
