@@ -9,10 +9,10 @@
                 <Link titulo="Termos de uso" />
                 <Link titulo="Privacidade" />
                 <div class="col-12 col-lg-3 d-flex justify-content-center my-3">
-                    <IconeSocial icone="facebook" />
-                    <IconeSocial icone="twitter" />
-                    <IconeSocial icone="youtube" />
-                    <IconeSocial icone="instagram" />
+                    <IconeSocial :icone="facebook" />
+                    <IconeSocial :icone="twitter" />
+                    <IconeSocial :icone="youtube" />
+                    <IconeSocial :icone="instagram" />
                 </div>
             </div>
             <div class="row">
@@ -28,6 +28,11 @@
 <script setup>
 import IconeSocial from './IconeSocial.vue';
 import Link from './LinkFooter.vue';
+
+import facebook from '@/assets/icons/facebook.svg'
+import twitter from '@/assets/icons/twitter.svg'
+import youtube from '@/assets/icons/youtube.svg'
+import instagram from '@/assets/icons/instagram.svg'
 
 </script>
 

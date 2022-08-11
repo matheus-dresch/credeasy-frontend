@@ -8,6 +8,9 @@
 
 <script lang='ts'>
 import BannerPadrao from './BannerPadrao.vue';
+import banner1 from '@/assets/images/home/banner1.webp';
+import banner2 from '@/assets/images/home/banner2.webp';
+import banner3 from '@/assets/images/home/banner3.webp';
 
 export default ({
     name: "BannersPrincipais",
@@ -19,7 +22,7 @@ export default ({
                 botao: "Cadastrar",
                 link: "/cadastro",
                 imagemInicio: true,
-                imagem: "banner1.webp"
+                imagem: banner1
             },
             bannerLogin: {
                 titulo: "Já é nosso cliente?",
@@ -27,7 +30,7 @@ export default ({
                 botao: "Entrar",
                 link: "/entrar",
                 imagemInicio: false,
-                imagem: "banner2.webp"
+                imagem: banner2
             },
             bannerSimular: {
                 titulo: "Quer apenas simular?",
@@ -35,7 +38,7 @@ export default ({
                 botao: "Simular",
                 link: "/",
                 imagemInicio: true,
-                imagem: "banner3.webp"
+                imagem: banner3
             }
         };
     },

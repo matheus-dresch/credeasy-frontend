@@ -1,6 +1,6 @@
 <template>
     <a :href="url">
-        <img :src="`/src/assets/icons/${icone}.svg`" :alt="icone" style="width: 2rem;">
+        <img :src="icone" :alt="icone" style="width: 2rem;">
     </a>
 </template>
 
