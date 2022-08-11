@@ -6,17 +6,20 @@ import router from './router';
 const state = {
     nome: '',
     gestor: undefined,
+    token: ''
 }
 
 const mutations = {
-    LOGA_USUARIO(state, { nome, gestor }) {
+    LOGA_USUARIO(state, { nome, gestor, token }) {
         state.nome = nome
         state.gestor = gestor
+        state.token = token
     },
 
     DESLOGA_USUARIO(state) {
         state.nome = ''
         state.gestor = false
+        state.token = ''
     }
 }
 
@@ -43,7 +46,8 @@ const actions = {
 
 const getters = {
     usuarioEhGestor: state => state.gestor,
-    usuario: state => state.nome
+    usuario: state => state.nome,
+    usuarioEstaLogado: state => Boolean(state.token)
 }
 
 export default new VueX.Store({

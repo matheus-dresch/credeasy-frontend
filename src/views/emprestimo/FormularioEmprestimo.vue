@@ -1,7 +1,6 @@
 <template>
     <HeaderCliente />
     <main class="p-3">
-        <Loading :is-loading="isLoading"/>
         <Formulario @submit="onSubmit" titulo="Solicite um novo empréstimo" action="/">
             <div class="form-floating mb-2">
                 <input v-model="nome" type="text" :class="classeValidacao(metaNome)" class="form-control input-box text-light rounded-4" placeholder="Computador novo"
@@ -51,7 +50,6 @@ import '@/assets/css/input.css'
 import { useField, useForm } from 'vee-validate';
 import EmprestimoService from '../../service/EmprestimoService';
 import Alerta from '../../components/shared/Alerta.vue';
-import Loading from '../../components/shared/Loading.vue';
 
 function classeValidacao(meta) {
     if (!meta.validated) return '';
@@ -104,16 +102,13 @@ const { value: valor, meta: metaValor } = useField('valor')
 const { value: qtd_parcelas, meta: metaParcelas } = useField('qtd_parcelas')
 
 const mensagemDeErro = ref('');
-const isLoading = ref(false);
 
 const onSubmit = handleSubmit(values => {
-    isLoading.value = true;
     EmprestimoService.registra(values)
         .then(res => router.push({ name: 'detalhar-emprestimo', params: { id: res.id } }))
         .catch(err => {
             console.log(err);
             mensagemDeErro.value = 'Houve um problema ao solicitar o empréstimo, tente novamente.'
-            isLoading.value = false;
         })
 });
 

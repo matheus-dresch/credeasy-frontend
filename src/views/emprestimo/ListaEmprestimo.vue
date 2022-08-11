@@ -1,7 +1,6 @@
 <template>
     <HeaderCliente />
     <main class="p-3 d-flex justify-content-center vld-parent">
-        <loading v-model:active="isLoading" :is-full-page="true" color="#fff" background-color="#0009" />
         <FundoPadrao size="100">
             <MsgErro v-if="erro.status" :erro="erro" />
             <TabelaPadrao v-if="emprestimos" titulo="Lista de empréstimos">
@@ -46,7 +45,6 @@ import { formataData, formataDinheiro } from '../../assets/js/formatar';
 import empSvc from '../../service/EmprestimoService';
 
 const emprestimos = ref();
-const isLoading = ref(true)
 const erro = ref({
     status: '',
     msg: ''
@@ -58,7 +56,6 @@ empSvc.lista()
         erro.value.msg = `Tivemos um problema ao carregar os empréstimos`;
         erro.value.status = err.response.status;
     })
-    .finally(() => isLoading.value = false);
 
 </script>
 

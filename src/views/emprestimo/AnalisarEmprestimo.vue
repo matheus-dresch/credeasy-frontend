@@ -1,7 +1,6 @@
 <template>
     <HeaderCliente />
     <main class="p-3 d-flex justify-content-center vld-parent">
-        <Loading :is-loading="isLoading" />
         <FundoPadrao size="50">
             <MsgErro v-if="erro.status" :erro="erro" />
             <TabelaPadrao v-if="cliente" :titulo="`Cliente ${cliente.nome}`">
@@ -117,14 +116,12 @@ import MsgErro from '../../components/shared/MsgErro.vue';
 import { useRoute } from 'vue-router';
 import { ref } from 'vue';
 import EmprestimoService from '../../service/EmprestimoService';
-import Loading from '../../components/shared/Loading.vue';
 import { formataData, formataDinheiro } from '../../assets/js/formatar';
 import Alerta from '../../components/shared/Alerta.vue';
 
 const emprestimo = ref();
 const cliente = ref();
 
-const isLoading = ref(true);
 const erro = ref({
     status: '',
     msg: ''
@@ -140,12 +137,10 @@ EmprestimoService.detalha(emprestimoId)
         erro.value.msg = `Tivemos um problema ao carregar o empréstimo`;
         erro.value.status = err.response.status;
     })
-    .finally(() => isLoading.value = false);
 
 
 const mensagemDeErro = ref('');
 function analisaEmprestimo(aprovado) {
-    isLoading.value = true
     EmprestimoService.analisa(aprovado, emprestimoId)
         .then(res => {
             emprestimo.value = res;
@@ -154,7 +149,6 @@ function analisaEmprestimo(aprovado) {
             console.log(err);
             mensagemDeErro.value = `Houve um problema ao analisar o empréstimo, tente novamente. [${err.response.status}]`
         })
-        .finally(() => isLoading.value = false)
 }
 
 </script>

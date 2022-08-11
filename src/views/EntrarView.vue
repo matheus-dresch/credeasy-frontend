@@ -1,7 +1,6 @@
 <template>
     <HeaderSimples />
     <main class="p-3">
-        <Loading :is-loading="isLoading" />
         <Formulario @submit="onSubmit" action="/" titulo="Olá! Seja bem-vindo novamente ;)">
             <div class="form-floating mb-2">
                 <input v-model="email" :class="classeValidacao(metaEmail)" type="text"
@@ -38,7 +37,6 @@ import http from '../http';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
 import { ref } from 'vue';
-import Loading from '../components/shared/Loading.vue';
 import Alerta from '../components/shared/Alerta.vue';
 
 function classeValidacao(meta) {
@@ -61,24 +59,20 @@ const { value: senha, meta: metaSenha } = useField('senha');
 const store = useStore();
 const router = useRouter();
 
-const isLoading = ref(false);
 const msgErro = ref('');
 
 const onSubmit = handleSubmit(values => {
-    isLoading.value = true;
-    http.get('http://localhost:8000/sanctum/csrf-cookie')
-        .then(() => store.dispatch('efetuarLogin', values))
-        .then(() => router.push({ name: 'cliente' }))
-        .catch(err => {
-            if (err.response.status === 401) {
-                msgErro.value = 'Email ou senha inválidos';
-                metaEmail.valid = false;
-                metaSenha.valid = false;
-            }
-        })
-        .finally(() => isLoading.value = false);
+    store.dispatch('efetuarLogin', values)
+    .then(() => router.push({ name: 'cliente' }))
+    .catch(err => {
+        if (err.response.status === 401) {
+            msgErro.value = 'Email ou senha inválidos';
+            metaEmail.valid = false;
+            metaSenha.valid = false;
+        }
+        console.log(err);
+    });
 });
-
 </script>
 
 <style scoped>

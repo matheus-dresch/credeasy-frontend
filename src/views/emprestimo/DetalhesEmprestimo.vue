@@ -1,7 +1,6 @@
 <template>
     <HeaderCliente />
     <main class="p-3 d-flex justify-content-center vld-parent">
-        <loading v-model:active="isLoading" :is-full-page="true" color="#fff" background-color="#0009" />
         <FundoPadrao size="50">
             <MsgErro v-if="erro.status" :erro="erro"/>
             <TabelaPadrao v-if="emprestimo" :titulo="`Empréstimo ${emprestimo.nome}`">
@@ -70,7 +69,6 @@ import { formataDinheiro, formataData } from '@/assets/js/formatar'
 import { useRoute } from 'vue-router';
 import { ref } from 'vue';
 
-const isLoading = ref(true);
 const emprestimo = ref();
 const erro = ref({
     status: '',
@@ -87,7 +85,6 @@ EmprestimoService.detalha(idEmprestimo)
         erro.value.msg = `Tivemos um problema ao carregar o empréstimo`;
         erro.value.status = err.response.status;
     })
-    .finally(() => isLoading.value = false);
 
 </script>
 

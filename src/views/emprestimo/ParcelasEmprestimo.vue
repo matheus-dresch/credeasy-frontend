@@ -1,7 +1,6 @@
 <template>
     <HeaderCliente />
     <main class="p-3 d-flex justify-content-center vld-parent">
-        <loading v-model:active="isLoading" :is-full-page="true" color="#fff" background-color="#0009" />
         <FundoPadrao size="75">
             <MsgErro v-if="erro.status" :erro="erro" />
             <TabelaPadrao v-if="parcelas" :titulo="`Parcelas do empréstimo`">
@@ -49,7 +48,6 @@ import BotaoGrande from '../../components/shared/BotaoGrande.vue';
 import EmprestimoService from '../../service/EmprestimoService';
 
 function pagarParcela(id, index) {
-    isLoading.value = true;
     EmprestimoService.pagaParcela(id)
         .then(parcela => {
             let parcelaPaga = parcelas.value[index];
@@ -64,13 +62,11 @@ function pagarParcela(id, index) {
         .catch(err => {
             console.log(err.response.data);
         })
-        .finally(() => isLoading.value = false);
 }
 
 
 const parcelas = ref();
 
-const isLoading = ref(true);
 const erro = ref({
     status: '',
     msg: ''
@@ -84,7 +80,6 @@ EmprestimoService.parcelas(emprestimoId)
         erro.value.msg = `Tivemos um problema ao carregar as parcelas`;
         erro.value.status = err.response.status;
     })
-    .finally(() => isLoading.value = false);
 </script>
 
 <style scoped>

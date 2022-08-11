@@ -1,7 +1,6 @@
 <template>
     <HeaderCliente />
     <main class="p-3 d-flex justify-content-center vld-parent">
-        <loading v-model:active="isLoading" :is-full-page="true" color="#fff" background-color="#0009" />
         <FundoPadrao size="100">
             <MsgErro v-if="erro.status" :erro="erro" />
             <TabelaPadrao titulo="Empréstimos para análise">
@@ -54,7 +53,6 @@ import EmprestimoService from '../service/EmprestimoService';
 const emprestimosParaAnalise = ref(null);
 const todosEmprestimos = ref(null);
 
-const isLoading = ref(true)
 const erro = ref({
     status: '',
     msg: ''
@@ -69,7 +67,6 @@ EmprestimoService.lista({ todos: true })
         erro.value.status = err.response.status;
         console.log(err.response.data);
     })
-    .finally(() => isLoading.value = false);
 
 </script>
 
