@@ -5,7 +5,7 @@
 <script setup>
 defineProps({
     url: {
-        type: String,
+        type: Object,
         required: true
     },
     titulo: {

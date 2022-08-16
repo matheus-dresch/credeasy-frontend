@@ -16,7 +16,7 @@
                     <li class="nav-item">
                         <router-link class="nav-link navbar-link rounded" to="">suporte</router-link>
                     </li>
-                    <li v-if="store.getters.usuarioEhGestor" class="nav-item">
+                    <li v-if="useTokenStore().token" class="nav-item">
                         <router-link class="nav-link navbar-link rounded" :to="{ name: 'gestor' }">sou gestor</router-link>
                     </li>
                     <li>
@@ -29,14 +29,14 @@
 </template>
 
 <script setup>
-import { useStore } from 'vuex';
 import router from '../../../router';
-
-const store = useStore();
+import { useNotificacaoStore } from '../../../stores/NotificacaoStore';
+import { useTokenStore } from '../../../stores/TokenStore';
 
 function efetuaLogout() {
-    store.commit('DESLOGA_USUARIO')
-    router.push({ name: 'entrar' })
+    useTokenStore().revogaToken();
+    useNotificacaoStore().notifica({ titulo: 'Sucesso', mensagem: 'Você saiu com sucesso.' })
+    router.push({ name: 'entrar' });
 }
 
 </script>

@@ -21,14 +21,13 @@
                     </li>
                 </ul>
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                    <li class="nav-item me-4 mb-3 mb-md-0">
-                        <router-link to="entrar" class="btn btn-outline-light px-4 fw-bold">Entrar</router-link>
+                    <li class="nav-item me-2 mb-3 mb-md-0">
+                        <router-link :to="{ name: 'entrar' }" class="btn btn-outline-light px-4 fw-bold">Entrar
+                        </router-link>
                     </li>
-                    <li class="nav-item">
-                        <form action="/cadastrp" method="GET" class="d-flex" id="cadastroForm">
-                            <input type="email" name="email" id="email" placeholder="Seu e-mail">
-                            <button id="submitBtn" type="submit" class="btn btn-outline-purple rounded-end">Cadastrar</button>
-                        </form>
+                    <li>
+                        <router-link :to="{ name: 'cadastro' }" class="btn btn-outline-purple px-4 fw-bold">Cadastrar
+                        </router-link>
                     </li>
                 </ul>
             </section>

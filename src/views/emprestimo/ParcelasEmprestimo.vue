@@ -1,9 +1,14 @@
 <template>
-    <HeaderCliente />
+    <header-cliente />
     <main class="p-3 d-flex justify-content-center vld-parent">
-        <FundoPadrao size="75">
-            <MsgErro v-if="erro.status" :erro="erro" />
-            <TabelaPadrao v-if="parcelas" :titulo="`Parcelas do empréstimo`">
+        <fundo-padrao size="75" v-if="emprestimo">
+            <h2 class="text-light text-center">
+                Parcelas do empréstimo
+                '<router-link :to="{ name: 'detalhar-emprestimo', params: { id: emprestimo.id } }" class="text-light">
+                    {{ emprestimo.nome }}
+                </router-link>'
+            </h2>
+            <tabela-padrao>
                 <thead>
                     <th>Número</th>
                     <th>Valor</th>
@@ -18,21 +23,21 @@
                         <td>{{ formataData(parcela.data_vencimento) }}</td>
                         <td>{{ formataData(parcela.data_pagamento) }}</td>
                         <td>{{ parcela.status }}</td>
-                        <td v-if="parcela.proxima" >
-                            <BotaoGrande titulo="Pagar" @click="pagarParcela(parcela.id, index)"/>
+                        <td v-if="parcela.numero === proximaParcela">
+                            <botao-grande titulo="Pagar" @click="pagarParcela(parcela.id, index)" />
                         </td>
                         <td v-else-if="parcela.status === 'PAGA'">
-                            <BotaoGrande titulo="Pago" cor="success" icone="check_circle" :disabled="true" />
+                            <botao-grande titulo="Pago" cor="success" icone="check_circle" :disabled="true" />
                         </td>
                         <td v-else>
-                            <BotaoGrande titulo="Pagar" cor="danger" icone="cancel" :disabled="true" />
+                            <botao-grande titulo="Pagar" cor="danger" icone="cancel" :disabled="true" />
                         </td>
                     </tr>
                 </tbody>
-            </TabelaPadrao>
-        </FundoPadrao>
+            </tabela-padrao>
+        </fundo-padrao>
     </main>
-    <FooterPadrao />
+    <footer-padrao />
 </template>
 
 <script setup>
@@ -46,39 +51,30 @@ import MsgErro from '../../components/shared/MsgErro.vue';
 import { formataData, formataDinheiro } from '../../assets/js/formatar';
 import BotaoGrande from '../../components/shared/BotaoGrande.vue';
 import EmprestimoService from '../../service/EmprestimoService';
+import { useNotificacaoStore } from '../../stores/NotificacaoStore';
 
 function pagarParcela(id, index) {
     EmprestimoService.pagaParcela(id)
         .then(parcela => {
-            let parcelaPaga = parcelas.value[index];
-            let proximaParcela = parcelas.value[index + 1]
-
-            parcelaPaga.status = parcela.status;
-            parcelaPaga.data_pagamento = parcela.data_pagamento;
-            
-            parcelaPaga.proxima = false;
-            proximaParcela.proxima = true;
+            parcelas.value[index] = parcela
+            proximaParcela.value++
         })
         .catch(err => {
-            console.log(err.response.data);
+            console.log(err);
+            // useNotificacaoStore().notifica({ titulo: err.status, mensagem: err.response.data.message })
         })
 }
 
-
 const parcelas = ref();
-
-const erro = ref({
-    status: '',
-    msg: ''
-})
+const proximaParcela = ref();
+const emprestimo = ref();
 
 const emprestimoId = useRoute().params.id
 EmprestimoService.parcelas(emprestimoId)
-    .then(res => parcelas.value = res)
-    .catch(err => {
-        console.log(err);
-        erro.value.msg = `Tivemos um problema ao carregar as parcelas`;
-        erro.value.status = err.response.status;
+    .then(res => {
+        parcelas.value = res.parcelas;
+        proximaParcela.value = res.dados.proxima_parcela;
+        emprestimo.value = res.emprestimo;
     })
 </script>
 

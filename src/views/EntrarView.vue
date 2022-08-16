@@ -1,22 +1,21 @@
 <template>
     <HeaderSimples />
     <main class="p-3">
-        <Formulario @submit="onSubmit" action="/" titulo="Olá! Seja bem-vindo novamente ;)">
+        <Formulario @submit="onSubmit" titulo="Olá! Seja bem-vindo novamente ;)">
             <div class="form-floating mb-2">
-                <input v-model="email" :class="classeValidacao(metaEmail)" type="text"
+                <input autocomplete="email" v-model="email" :class="classeValidacao(metaEmail)" type="text"
                     class="form-control input-box text-light rounded-4" placeholder="voce@email.com">
                 <label class="text-light">Email</label>
             </div>
             <div class="form-floating mb-2">
-                <input v-model="senha" :class="classeValidacao(metaSenha)" type="password"
-                    class="form-control input-box text-light rounded-4" placeholder="123">
+                <input autocomplete="current-password" v-model="senha" :class="classeValidacao(metaSenha)"
+                    type="password" class="form-control input-box text-light rounded-4" placeholder="123">
                 <label class="text-light">Senha</label>
             </div>
-            <Alerta v-if="msgErro" :texto="msgErro" />
             <Botao titulo="Entrar" />
             <div class="d-flex flex-column align-items-center">
-                <LinkFormulario titulo="Esqueci a senha" url="/" />
-                <LinkFormulario titulo="Não sou cliente" url="/" />
+                <LinkFormulario titulo="Esqueci a senha" :url="{ name: 'home' }" />
+                <LinkFormulario titulo="Não sou cliente" :url="{ name: 'cadastro' }" />
             </div>
         </Formulario>
 
@@ -33,11 +32,9 @@ import * as yup from 'yup';
 import { useField, useForm } from 'vee-validate';
 import Botao from '../components/shared/formulario/Botao.vue';
 import LinkFormulario from '../components/shared/formulario/LinkFormulario.vue';
-import http from '../http';
-import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
-import { ref } from 'vue';
-import Alerta from '../components/shared/Alerta.vue';
+import http from '../http';
+import { useTokenStore } from '../stores/TokenStore';
 
 function classeValidacao(meta) {
     if (!meta.validated) return '';
@@ -56,22 +53,18 @@ const { handleSubmit } = useForm({
 const { value: email, meta: metaEmail } = useField('email');
 const { value: senha, meta: metaSenha } = useField('senha');
 
-const store = useStore();
 const router = useRouter();
 
-const msgErro = ref('');
-
-const onSubmit = handleSubmit(values => {
-    store.dispatch('efetuarLogin', values)
-    .then(() => router.push({ name: 'cliente' }))
-    .catch(err => {
-        if (err.response.status === 401) {
-            msgErro.value = 'Email ou senha inválidos';
+const onSubmit = handleSubmit(({ email, senha }) => {
+    http.post('login', { email, senha })
+        .then(res => {
+            useTokenStore().defineToken(res.data.token);
+            router.push({ name: 'cliente' })
+        })
+        .catch(err => {
             metaEmail.valid = false;
             metaSenha.valid = false;
-        }
-        console.log(err);
-    });
+        });
 });
 </script>
 

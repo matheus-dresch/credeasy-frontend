@@ -27,8 +27,8 @@ export default class EmprestimoService {
         return res.data;
     }
 
-    static async analisa(aprovado, id) {
-        const res = await http.patch(`emprestimos/${id}`, { status: aprovado })
+    static async analisa(aprovado, id, taxa) {
+        const res = await http.patch(`emprestimos/${id}`, { status: aprovado, taxa: taxa })
         return res.data;
     }
 }

@@ -29,7 +29,7 @@
 
             <Botao titulo="Solicitar" />
             <div class="d-flex flex-column align-items-center">
-                <LinkFormulario url="/cliente" titulo="Voltar ao dashboard" />
+                <LinkFormulario :url="{ name: 'cliente' }" titulo="Voltar ao dashboard" />
             </div>
         </Formulario>
     </main>
@@ -105,7 +105,7 @@ const mensagemDeErro = ref('');
 
 const onSubmit = handleSubmit(values => {
     EmprestimoService.registra(values)
-        .then(res => router.push({ name: 'detalhar-emprestimo', params: { id: res.id } }))
+        .then(res => router.push({ name: 'detalhar-emprestimo', params: { id: res.emprestimo.id } }))
         .catch(err => {
             console.log(err);
             mensagemDeErro.value = 'Houve um problema ao solicitar o empréstimo, tente novamente.'

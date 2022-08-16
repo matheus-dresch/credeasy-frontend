@@ -11,6 +11,7 @@ import ClienteView from "../views/ClienteView.vue";
 import GestorView from "../views/GestorView.vue";
 import NotFoundView from "../views/NotFoundView.vue";
 import store from "../store";
+import { useTokenStore } from "../stores/TokenStore";
 
 const router = createRouter({
 	history: createWebHistory(import.meta.env.BASE_URL),
@@ -81,15 +82,15 @@ const router = createRouter({
 			meta: {
 				public: true
 			}
-		}
+		},
 	],
 });
 
 router.beforeEach((routeTo, routeFrom, next) => {
-	if (! routeTo.meta.public && ! store.state.nome) {
+	if (! routeTo.meta.public && ! useTokenStore().token) {
 		return next({ name: 'entrar' })
 	}
-
+	
 	next();
 })
 

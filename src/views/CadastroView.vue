@@ -83,21 +83,21 @@
                 <div class="invalid-feedback">{{ errors.email }}</div>
             </div>
             <div class="form-floating mb-2">
-                <input v-model="senha" :class="classeValidacao(metaSenha)" type="text"
+                <input autocomplete="off" v-model="senha" :class="classeValidacao(metaSenha)" type="password"
                     class="form-control input-box text-light rounded-4" placeholder="123">
                 <label class="text-light">Senha</label>
                 <div class="invalid-feedback">{{ errors.senha }}</div>
             </div>
             <div class="form-floating mb-2">
-                <input v-model="senhaconfirm" :class="classeValidacao(metaSenhaConfirm)" type="text"
-                    class="form-control input-box text-light rounded-4" placeholder="123">
+                <input autocomplete="off" v-model="senhaconfirm" :class="classeValidacao(metaSenhaConfirm)"
+                    type="password" class="form-control input-box text-light rounded-4" placeholder="123">
                 <label class="text-light">Confirme a senha</label>
                 <div class="invalid-feedback">{{ errors.senhaconfirm }}</div>
             </div>
 
             <Botao titulo="Cadastrar-se" />
             <div class="d-flex justify-content-center">
-                <LinkFormulario titulo="Já sou cliente" url="entrar" />
+                <LinkFormulario titulo="Já sou cliente" :url="{ name: 'entrar' }" />
             </div>
         </Formulario>
     </main>
@@ -115,6 +115,9 @@ import { useField, useForm } from 'vee-validate';
 import Botao from '../components/shared/formulario/Botao.vue';
 import LinkFormulario from '../components/shared/formulario/LinkFormulario.vue';
 import axios from 'axios';
+import http from '../http';
+import { useNotificacaoStore } from '../stores/NotificacaoStore';
+import { useRouter } from 'vue-router';
 
 function classeValidacao(meta) {
     if (!meta.validated) return '';
@@ -168,7 +171,7 @@ const { handleSubmit, errors } = useForm({
     validationSchema: schema
 })
 
-const { value: uf, meta: metaUf  } = useField('uf');
+const { value: uf, meta: metaUf } = useField('uf');
 const { value: cep, meta: metaCep } = useField('cep');
 const { value: cpf, meta: metaCpf } = useField('cpf');
 const { value: rua, meta: metaRua } = useField('rua');
@@ -189,8 +192,18 @@ function onInvalidSubmit({ values, errors, results }) {
     console.log(results); // a detailed map of field names and their validation results
 }
 
+const router = useRouter();
+
 const onSubmit = handleSubmit(values => {
-    alert(JSON.stringify(values, null, 2));
+    http.post('cadastro', { values })
+        .then(res => {
+            useNotificacaoStore().notifica({
+                titulo: 'Bem vindo! :)',
+                mensagem: 'Entre na sua conta para continuar'
+            });
+            router.push({ name: 'entrar' })
+        })
+        .catch(err => console.log(err))
 }, onInvalidSubmit);
 
 </script>

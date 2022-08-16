@@ -47,7 +47,7 @@
                             </span>
                         </th>
                         <td>
-                            {{ formataDinheiro(emprestimo.valor_final) }}
+                            {{ formataDinheiro(valorFinalEmprestimo) }}
                         </td>
                     </tr>
                     <tr>
@@ -69,7 +69,7 @@
                             <div class="mb-2">
                                 <label for="valor_parc" class="form-label text-light">Taxa de juros (%)</label>
                                 <input class="form-control" type="number" min="10" max="20" step="0.1" name="taxa"
-                                    id="taxa" :value="emprestimo.taxa_juros">
+                                    id="taxa" :value="taxaDeJuros" @input="taxaDeJuros = $event.target.value">
                             </div>
                             <div>
                                 <button @click.prevent="analisaEmprestimo(true)"
@@ -81,7 +81,7 @@
                         <td>
                             <div class="mb-2">
                                 <label for="valor_parc" class="form-label text-light">Valor da parcela</label>
-                                <input class="form-control disabled" type="text" id="valor_parc" disabled value="R$ ">
+                                <input class="form-control disabled" type="text" id="valor_parc" disabled :value="formataDinheiro(valorParcela) ">
                             </div>
                             <div>
                                 <button @click.prevent="analisaEmprestimo(false)"
@@ -114,7 +114,7 @@ import MsgErro from '../../components/shared/MsgErro.vue';
 
 // Outros
 import { useRoute } from 'vue-router';
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import EmprestimoService from '../../service/EmprestimoService';
 import { formataData, formataDinheiro } from '../../assets/js/formatar';
 import Alerta from '../../components/shared/Alerta.vue';
@@ -138,10 +138,14 @@ EmprestimoService.detalha(emprestimoId)
         erro.value.status = err.response.status;
     })
 
+const taxaDeJuros = ref(20);
+
+const valorFinalEmprestimo = computed(() => emprestimo.value.valor * (taxaDeJuros.value / 100 + 1));
+const valorParcela = computed(() => valorFinalEmprestimo.value / emprestimo.value.qtd_parcelas);
 
 const mensagemDeErro = ref('');
 function analisaEmprestimo(aprovado) {
-    EmprestimoService.analisa(aprovado, emprestimoId)
+    EmprestimoService.analisa(aprovado, emprestimoId, taxaDeJuros.value)
         .then(res => {
             emprestimo.value = res;
         })

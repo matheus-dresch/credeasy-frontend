@@ -12,7 +12,7 @@
                     <th class="w-15">Status</th>
                 </thead>
                 <tbody>
-                    <tr v-if="emprestimosParaAnalise" v-for="emprestimo of emprestimosParaAnalise">
+                    <tr v-if="temEmprestimos" v-for="emprestimo of emprestimosParaAnalise">
                         <td>{{ emprestimo.nome }}</td>
                         <td>{{ formataDinheiro(emprestimo.valor) }}</td>
                         <td>{{ emprestimo.qtd_parcelas }}</td>
@@ -49,9 +49,12 @@ import MsgErro from '../components/shared/MsgErro.vue';
 import { ref } from 'vue';
 import { formataData, formataDinheiro } from '../assets/js/formatar';
 import EmprestimoService from '../service/EmprestimoService';
+import { computed } from '@vue/reactivity';
 
-const emprestimosParaAnalise = ref(null);
-const todosEmprestimos = ref(null);
+const temEmprestimos = computed(() => emprestimosParaAnalise.value.length > 0);
+
+const emprestimosParaAnalise = ref([]);
+const todosEmprestimos = ref([]);
 
 const erro = ref({
     status: '',
@@ -60,7 +63,7 @@ const erro = ref({
 
 EmprestimoService.lista({ todos: true })
     .then(res => {
-        emprestimosParaAnalise.value = res.emprestimosParaAnalise.length > 0 ? res.emprestimosParaAnalise : null;
+        emprestimosParaAnalise.value = res.emprestimos_analise;
     })
     .catch(err => {
         erro.value.msg = `Tivemos um problema ao carregar os empréstimos`;

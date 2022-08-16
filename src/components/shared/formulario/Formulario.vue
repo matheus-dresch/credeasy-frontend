@@ -1,6 +1,6 @@
 <template>
     <section class="d-flex flex-column align-items-center">
-        <form :action="action" class="form" method="post">
+        <form class="form" method="post">
             <h1>{{ titulo }}</h1>
             <slot></slot>
         </form>
@@ -14,10 +14,6 @@ defineProps({
         type: String,
         required: true
     },
-    action: {
-        type: String,
-        required: true
-    }
 })
 
 </script>

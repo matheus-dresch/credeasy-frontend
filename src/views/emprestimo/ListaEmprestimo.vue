@@ -3,7 +3,7 @@
     <main class="p-3 d-flex justify-content-center vld-parent">
         <FundoPadrao size="100">
             <MsgErro v-if="erro.status" :erro="erro" />
-            <TabelaPadrao v-if="emprestimos" titulo="Lista de empréstimos">
+            <TabelaPadrao titulo="Lista de empréstimos">
                 <thead>
                     <th class="w-15">Nome</th>
                     <th class="w-15">Valor</th>
@@ -12,7 +12,7 @@
                     <th class="w-15">Status</th>
                 </thead>
                 <tbody>
-                    <tr v-for="emprestimo of emprestimos">
+                    <tr v-if="temEmprestimos" v-for="emprestimo of emprestimos">
                         <td>{{ emprestimo.nome }}</td>
                         <td>{{ formataDinheiro(emprestimo.valor) }}</td>
                         <td>{{ emprestimo.qtd_parcelas }}</td>
@@ -22,8 +22,14 @@
                             <LinkRoxo :url="{ name: 'detalhar-emprestimo', params: { id: emprestimo.id } }" />
                         </td>
                     </tr>
+                    <tr v-else>
+                        <td colspan="7">
+                            <h3 class="text-center">Você ainda não possui empréstimos</h3>
+                        </td>
+                    </tr>
                 </tbody>
             </TabelaPadrao>
+            
         </FundoPadrao>
     </main>
     <FooterPadrao />
@@ -43,8 +49,11 @@ import MsgErro from '../../components/shared/MsgErro.vue';
 import { ref } from 'vue';
 import { formataData, formataDinheiro } from '../../assets/js/formatar';
 import empSvc from '../../service/EmprestimoService';
+import { computed } from '@vue/reactivity';
 
-const emprestimos = ref();
+const temEmprestimos = computed(() => emprestimos.value.length > 0);
+
+const emprestimos = ref([]);
 const erro = ref({
     status: '',
     msg: ''
