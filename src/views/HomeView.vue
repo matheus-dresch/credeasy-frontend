@@ -16,6 +16,8 @@ import Banners from '../components/home/banner/BannersPrincipais.vue';
 import Informacoes from '../components/home/informacoes/Informacoes.vue';
 import Footer from '../components/shared/footer/FooterPadrao.vue';
 
+import '@/assets/css/home/style.css';
+
 export default defineComponent({
     name: "HomeView",
     data() {
@@ -27,5 +29,5 @@ export default defineComponent({
 </script>
 
 <style>
-@import '../assets/css/home/style.css';
+
 </style>

@@ -19,7 +19,7 @@
                     </tr>
                     <tr>
                         <th>Telefone</th>
-                        <td>{{ cliente.telefone }}</td>
+                        <td>{{ cliente.celular }}</td>
                     </tr>
                 </tbody>
             </TabelaPadrao>
@@ -91,10 +91,6 @@
                             </div>
                         </td>
                     </tr>
-                    <tr v-else>
-                        <th>Taxa de juros</th>
-                        <td>{{ emprestimo.taxa_juros }}</td>
-                    </tr>
                 </tbody>
             </TabelaPadrao>
             <Alerta v-if="mensagemDeErro" :texto="mensagemDeErro" />
@@ -128,10 +124,11 @@ const erro = ref({
 })
 
 const emprestimoId = useRoute().params.id
-EmprestimoService.detalha(emprestimoId)
+EmprestimoService.detalha(emprestimoId, { cliente: true })
     .then(res => {
-        emprestimo.value = res;
-        cliente.value = res.cliente;
+        console.log(res);
+        emprestimo.value = res.data.emprestimo;
+        cliente.value = res.data.cliente;
     })
     .catch(err => {
         erro.value.msg = `Tivemos um problema ao carregar o empréstimo`;
@@ -147,7 +144,7 @@ const mensagemDeErro = ref('');
 function analisaEmprestimo(aprovado) {
     EmprestimoService.analisa(aprovado, emprestimoId, taxaDeJuros.value)
         .then(res => {
-            emprestimo.value = res;
+            emprestimo.value = res.data.emprestimo;
         })
         .catch(err => {
             console.log(err);

@@ -42,7 +42,7 @@ function classeValidacao(meta) {
 }
 
 const schema = yup.object({
-    email: yup.string().required().email().label('O email'),
+email: yup.string().required().email().label('O email'),
     senha: yup.string().required().min(8).max(64).label('A senha'),
 })
 
@@ -58,7 +58,7 @@ const router = useRouter();
 const onSubmit = handleSubmit(({ email, senha }) => {
     http.post('login', { email, senha })
         .then(res => {
-            useTokenStore().defineToken(res.data.token);
+            useTokenStore().defineToken(res.data.data.token, res.data.data.gestor);
             router.push({ name: 'cliente' })
         })
         .catch(err => {

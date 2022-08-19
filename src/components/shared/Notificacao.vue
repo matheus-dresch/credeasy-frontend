@@ -11,7 +11,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue';
+import { onMounted } from 'vue';
 import { useNotificacaoStore } from '../../stores/NotificacaoStore'
 import { Toast } from 'bootstrap'
 
@@ -25,7 +25,6 @@ onMounted(() => {
     const el = document.querySelector(`#toast_${props.notificacao.index}`)
     const elementoToast = new Toast(el);
     elementoToast.show();
-
     el.addEventListener('hidden.bs.toast', () => {
         useNotificacaoStore().remove(props.notificacao)
     })

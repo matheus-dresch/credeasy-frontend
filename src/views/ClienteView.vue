@@ -50,9 +50,9 @@
             </div>
             <div class="row">
                 <card :icone="iconeGrafico" titulo="Estatísticas">
-                    <card-dado  icone="payments" :conteudo="'Emprestado: ' + formataDinheiro(dados.total_emprestado) "/>
-                    <card-dado  icone="paid" :conteudo="'Pago: ' + formataDinheiro(dados.total_pago) "/>
-                    <card-dado  icone="filter_1" :conteudo="'Empréstimos: ' + dados.qtd_emprestimos "/>
+                    <card-dado  icone="payments" :conteudo="'Emprestado: ' + formataDinheiro(cliente.total_emprestado) "/>
+                    <card-dado  icone="paid" :conteudo="'Pago: ' + formataDinheiro(cliente.total_pago) "/>
+                    <card-dado  icone="filter_1" :conteudo="'Empréstimos: ' + cliente.quantidade_emprestimos "/>
                 </card>
                 <card :icone="iconeAjuda" titulo="Contato">
                     <card-dado  icone="call" conteudo="(54) 3003-9999"/>
@@ -72,7 +72,7 @@
                             <th class="w-20">Status</th>
                         </thead>
                         <tbody>
-                            <tr v-for="emprestimo in emprestimosFiltrados">
+                            <tr v-for="emprestimo in emprestimosFiltrados" :class="{ 'bg-white-25': emprestimo.status === 'QUITADO' }" class="rounded">
                                 <td>{{ emprestimo.nome }}</td>
                                 <td>{{ formataDinheiro(emprestimo.valor) }}</td>
                                 <td>{{ emprestimo.qtd_parcelas }}</td>
@@ -101,7 +101,6 @@ import iconeEstrela from '@/assets/icons/cliente/star.svg';
 import iconeGrafico from '@/assets/icons/cliente/graph.svg';
 import iconeAjuda from '@/assets/icons/cliente/help.svg';
 import iconeAviso from '@/assets/icons/cliente/warn.svg';
-
 
 import http from '../http';
 import { formataData, formataDinheiro } from '../assets/js/formatar';
@@ -136,3 +135,10 @@ const emprestimosFiltrados = computed(() => {
 })
 
 </script>
+
+<style>
+.bg-white-25 {
+    background-color: #fff1;
+}
+
+</style>

@@ -5,7 +5,6 @@ import VueMask from '@devindex/vue-mask'; // <-- ADD THIS LINE
 import * as Yup from 'yup';
 import { pt } from "yup-locale-pt";
 import { VMoney } from 'v-money';
-import store from "./store";
 import VueLoading from 'vue-loading-overlay';
 import { createPinia } from 'pinia';
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
@@ -27,7 +26,6 @@ app.directive('money', VMoney)
 
 app.use(pinia);
 app.use(VueLoading)
-app.use(store);
 app.use(VueMask);
 app.use(router);
 

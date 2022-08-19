@@ -7,8 +7,8 @@ export default class EmprestimoService {
         return res.data;
     }
 
-    static async detalha(id) {
-        const res = await http.get(`emprestimos/${id}`);
+    static async detalha(id, query = {}) {
+        const res = await http.get(`emprestimos/${id}`, { params: query });
         return res.data;
     }
 
@@ -18,8 +18,8 @@ export default class EmprestimoService {
     }
 
     static async pagaParcela(id) {
-        const res = await http.patch(`parcela`, { parcela: id })
-        return res.data.parcela;
+        const res = await http.patch(`parcela/${id}`)
+        return res.data.data.parcela;
     }
 
     static async registra(values) {

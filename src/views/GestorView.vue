@@ -61,9 +61,9 @@ const erro = ref({
     msg: ''
 })
 
-EmprestimoService.lista({ todos: true })
+EmprestimoService.lista({ gestor: true })
     .then(res => {
-        emprestimosParaAnalise.value = res.emprestimos_analise;
+        emprestimosParaAnalise.value = res.data.emprestimos_solicitados;
     })
     .catch(err => {
         erro.value.msg = `Tivemos um problema ao carregar os empréstimos`;

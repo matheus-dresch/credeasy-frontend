@@ -105,7 +105,7 @@ const mensagemDeErro = ref('');
 
 const onSubmit = handleSubmit(values => {
     EmprestimoService.registra(values)
-        .then(res => router.push({ name: 'detalhar-emprestimo', params: { id: res.emprestimo.id } }))
+        .then(res => router.push({ name: 'detalhar-emprestimo', params: { id: res.data.emprestimo.id } }))
         .catch(err => {
             console.log(err);
             mensagemDeErro.value = 'Houve um problema ao solicitar o empréstimo, tente novamente.'

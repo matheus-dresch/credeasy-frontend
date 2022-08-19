@@ -47,9 +47,8 @@ http.interceptors.response.use(response => {
 }, err => {
     err.config.spinner.hide();
 
-    if (err.response.status && err.response.status === 401) {
-        router.push({ name: 'entrar' })
-    }
+    if (err.response.status && err.response.status === 401) router.push({ name: 'entrar' })
+    
 
     useNotificacaoStore().notifica({
         titulo: `Erro ${err.response.status}`,

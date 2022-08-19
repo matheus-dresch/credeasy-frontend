@@ -4,9 +4,9 @@
         <fundo-padrao size="75" v-if="emprestimo">
             <h2 class="text-light text-center">
                 Parcelas do empréstimo
-                '<router-link :to="{ name: 'detalhar-emprestimo', params: { id: emprestimo.id } }" class="text-light">
-                    {{ emprestimo.nome }}
-                </router-link>'
+                <router-link :to="{ name: 'detalhar-emprestimo', params: { id: emprestimo } }" class="text-light">
+                    {{ emprestimo }}
+                </router-link>
             </h2>
             <tabela-padrao>
                 <thead>
@@ -17,7 +17,7 @@
                     <th>Status</th>
                 </thead>
                 <tbody v-for="parcela, index in parcelas">
-                    <tr>
+                    <tr :class=" { 'bg-warning-25': parcela.status === 'ATRASADA' } ">
                         <td class="fw-bold"># {{ parcela.numero }}</td>
                         <td>{{ formataDinheiro(parcela.valor) }}</td>
                         <td>{{ formataData(parcela.data_vencimento) }}</td>
@@ -47,11 +47,9 @@ import HeaderCliente from '../../components/shared/headers/HeaderCliente.vue';
 import FundoPadrao from '../../components/shared/FundoPadrao.vue';
 import TabelaPadrao from '../../components/shared/TabelaPadrao.vue';
 import { useRoute } from 'vue-router';
-import MsgErro from '../../components/shared/MsgErro.vue';
 import { formataData, formataDinheiro } from '../../assets/js/formatar';
 import BotaoGrande from '../../components/shared/BotaoGrande.vue';
 import EmprestimoService from '../../service/EmprestimoService';
-import { useNotificacaoStore } from '../../stores/NotificacaoStore';
 
 function pagarParcela(id, index) {
     EmprestimoService.pagaParcela(id)
@@ -61,7 +59,6 @@ function pagarParcela(id, index) {
         })
         .catch(err => {
             console.log(err);
-            // useNotificacaoStore().notifica({ titulo: err.status, mensagem: err.response.data.message })
         })
 }
 
@@ -72,14 +69,18 @@ const emprestimo = ref();
 const emprestimoId = useRoute().params.id
 EmprestimoService.parcelas(emprestimoId)
     .then(res => {
-        parcelas.value = res.parcelas;
-        proximaParcela.value = res.dados.proxima_parcela;
-        emprestimo.value = res.emprestimo;
+        parcelas.value = res.data.parcelas;
+        proximaParcela.value = res.data.proxima_parcela;
+        emprestimo.value = res.data.emprestimo;
     })
 </script>
 
 <style scoped>
 td {
     vertical-align: middle;
+}
+
+.bg-warning-25 {
+    background-color: #f001;
 }
 </style>

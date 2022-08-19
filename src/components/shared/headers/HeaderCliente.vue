@@ -16,7 +16,7 @@
                     <li class="nav-item">
                         <router-link class="nav-link navbar-link rounded" to="">suporte</router-link>
                     </li>
-                    <li v-if="useTokenStore().token" class="nav-item">
+                    <li v-if="useTokenStore().gestor" class="nav-item">
                         <router-link class="nav-link navbar-link rounded" :to="{ name: 'gestor' }">sou gestor</router-link>
                     </li>
                     <li>
