@@ -2,7 +2,7 @@ import http from "../http";
 
 export default class EmprestimoService {
     static async lista(query = {}) {
-        const res = await http.get('emprestimos', { params: query });
+        const res = await http.get('clientes/@eu/emprestimos', { params: query });
 
         return res.data;
     }

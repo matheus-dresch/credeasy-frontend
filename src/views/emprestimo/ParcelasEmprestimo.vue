@@ -70,8 +70,8 @@ const emprestimoId = useRoute().params.id
 EmprestimoService.parcelas(emprestimoId)
     .then(res => {
         parcelas.value = res.data.parcelas;
-        proximaParcela.value = res.data.proxima_parcela;
-        emprestimo.value = res.data.emprestimo;
+        console.log(parcelas.value);
+        emprestimo.value = parcelas.value[1].emprestimo_id;
     })
 </script>
 

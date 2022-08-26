@@ -50,9 +50,9 @@
             </div>
             <div class="row">
                 <card :icone="iconeGrafico" titulo="Estatísticas">
-                    <card-dado  icone="payments" :conteudo="'Emprestado: ' + formataDinheiro(cliente.total_emprestado) "/>
-                    <card-dado  icone="paid" :conteudo="'Pago: ' + formataDinheiro(cliente.total_pago) "/>
-                    <card-dado  icone="filter_1" :conteudo="'Empréstimos: ' + cliente.quantidade_emprestimos "/>
+                    <card-dado  icone="payments" :conteudo="'Emprestado: ' + formataDinheiro(dados.total_emprestado) "/>
+                    <card-dado  icone="paid" :conteudo="'Pago: ' + formataDinheiro(dados.total_pago) "/>
+                    <card-dado  icone="filter_1" :conteudo="'Empréstimos: ' + dados.qtd_emprestimos "/>
                 </card>
                 <card :icone="iconeAjuda" titulo="Contato">
                     <card-dado  icone="call" conteudo="(54) 3003-9999"/>
@@ -109,21 +109,20 @@ import LinkRoxo from '../components/shared/LinkRoxo.vue';
 import { computed, ref } from '@vue/reactivity';
 
 const ultimoEmprestimo = ref();
-const proximaParcela = ref();
+const proximaParcela = ref('');
 const emprestimos = ref([]);
-const cliente = ref();
 const dados = ref();
+const cliente = ref();
 
-http.get('cliente')
+http.get('clientes/@eu')
     .then(res => {
-        const data = res.data;
+        const data = res.data.data.cliente;
 
-        ultimoEmprestimo.value = data.ultimo_emprestimo;
         emprestimos.value = data.emprestimos
-        proximaParcela.value = data.proxima_parcela;
         dados.value = data.dados;
-        
-        cliente.value = data.cliente;
+        ultimoEmprestimo.value = dados.value.ultimo_emprestimo ;
+        proximaParcela.value = dados.value?.proxima_parcela
+        cliente.value = data;
     });
 
 const filtro = ref();
